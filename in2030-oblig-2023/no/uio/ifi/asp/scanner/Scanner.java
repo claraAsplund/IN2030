@@ -73,14 +73,81 @@ public class Scanner {
 	    scannerError("Unspecified I/O error!");
 	}
 
+
+	// - arbiedskode ->
+
+	int pos = 0;
+	//while (pos < line.length()) {
+	//	char c = line.charAt(pos);
+	//	if(c == "#"){
+	//		
+	//	}
+	//}
+	while (pos < line.length()) {
+		char c = line.charAt(pos++);
+		if (Character.isWhitespace(c)) {
+		
+		} else if (isDigit(c)) {
+			Token t = new Token(integerToken,curLineNum());
+			t.integerLit = c - '0';
+			curLineTokens.add(t);
+		} else if (c == '*'){
+			curLineTokens.add(new Token(TokenKind.astToken));
+		} else if (c == '='){
+			curLineTokens.add(new Token(TokenKind.equalToken));
+		} else if (c == '>'){
+			curLineTokens.add(new Token(TokenKind.greaterToken));
+		} else if (c == '<'){
+			curLineTokens.add(new Token(TokenKind.lessToken));
+		} else if (c == '<'){
+			curLineTokens.add(new Token(TokenKind.lessToken));
+		} else if (c == '-'){
+			curLineTokens.add(new Token(TokenKind.minusToken));
+		} else if (c == '%'){
+			curLineTokens.add(new Token(TokenKind.percentToken));
+		} else if (c == '+'){
+			curLineTokens.add(new Token(TokenKind.plusToken));
+		} else if(c == '/'){
+			curLineTokens.add(new Token(TokenKind.slashToken));
+		} else if(c == ':'){
+			curLineTokens.add(new Token(TokenKind.colonToken));
+		} else if(c == ','){
+			curLineTokens.add(new Token(TokenKind.commaToken));
+		} else if(c == '{'){
+			curLineTokens.add(new Token(TokenKind.leftBraceToken));
+		} else if(c == '['){
+			curLineTokens.add(new Token(TokenKind.leftBracketToken));
+		} else if(c == '('){
+			curLineTokens.add(new Token(TokenKind.leftParToken));
+		} else if(c == '}'){
+			curLineTokens.add(new Token(TokenKind.rightBraceToken));
+		} else if(c == ']'){
+			curLineTokens.add(new Token(TokenKind.rightBracketToken));
+		} else if(c == ')'){
+			curLineTokens.add(new Token(TokenKind.rightParToken));
+		} else if(c == ';'){
+			curLineTokens.add(new Token(TokenKind.semicolonToken));
+		}
+	}
+ 
+    
+    curLineTokens.add(new Token(newLineToken,curLineNum()));
+	
+	//ArrayList<String> testlist = new ArrayList<>(Arrays.asList(line.split("")));
+	//System.out.println(testlist);
+
+	// - slutt på arbeidskode <-
+
+	
 	//-- Must be changed in part 1:
 
 	// Terminate line:
-	curLineTokens.add(new Token(newLineToken,curLineNum()));
 
 	for (Token t: curLineTokens) 
 	    Main.log.noteToken(t);
+		System.out.println(curLineTokens);
     }
+
 
     public int curLineNum() {
 	return sourceFile!=null ? sourceFile.getLineNumber() : 0;
