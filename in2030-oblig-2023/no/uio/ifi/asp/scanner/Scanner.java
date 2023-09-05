@@ -77,56 +77,73 @@ public class Scanner {
 	// - arbiedskode ->
 
 	int pos = 0;
-	//while (pos < line.length()) {
-	//	char c = line.charAt(pos);
-	//	if(c == "#"){
-	//		
-	//	}
-	//}
 	while (pos < line.length()) {
 		char c = line.charAt(pos++);
 		if (Character.isWhitespace(c)) {
 		
-		} else if (isDigit(c)) {
+		} 
+		else if(c == '#'){
+			return;
+		} 
+		else if (isDigit(c)) {
+			//private ArrayList<Type> arrayList= new ArrayList<>();
+			//char next = line.charAt(pos++);
+			//int myNum = 0;
+			//while(isDigit(next)){
+			//	myNum = myNum + next;	
+			//}
 			Token t = new Token(integerToken,curLineNum());
 			t.integerLit = c - '0';
 			curLineTokens.add(t);
+			//System.out.println(myNum);
 		} else if (c == '*'){
-			curLineTokens.add(new Token(TokenKind.astToken));
+			curLineTokens.add(new Token(asToken,curLineNum()));
 		} else if (c == '='){
-			curLineTokens.add(new Token(TokenKind.equalToken));
+			if(line.charAt(pos++) == '='){
+				curLineTokens.add(new Token(doubleEqualToken,curLineNum()));
+			} else
+			curLineTokens.add(new Token(equalToken,curLineNum()));
 		} else if (c == '>'){
-			curLineTokens.add(new Token(TokenKind.greaterToken));
+			if(line.charAt(pos++) == '='){
+				curLineTokens.add(new Token(greaterEqualToken,curLineNum()));
+			} else
+			curLineTokens.add(new Token(greaterToken,curLineNum()));
 		} else if (c == '<'){
-			curLineTokens.add(new Token(TokenKind.lessToken));
-		} else if (c == '<'){
-			curLineTokens.add(new Token(TokenKind.lessToken));
+			if(line.charAt(pos++) == '='){
+				curLineTokens.add(new Token(lessEqualToken,curLineNum()));
+			} else
+			curLineTokens.add(new Token(lessToken,curLineNum()));
 		} else if (c == '-'){
-			curLineTokens.add(new Token(TokenKind.minusToken));
+			curLineTokens.add(new Token(minusToken,curLineNum()));
 		} else if (c == '%'){
-			curLineTokens.add(new Token(TokenKind.percentToken));
+			curLineTokens.add(new Token(percentToken,curLineNum()));
 		} else if (c == '+'){
-			curLineTokens.add(new Token(TokenKind.plusToken));
-		} else if(c == '/'){
-			curLineTokens.add(new Token(TokenKind.slashToken));
-		} else if(c == ':'){
-			curLineTokens.add(new Token(TokenKind.colonToken));
-		} else if(c == ','){
-			curLineTokens.add(new Token(TokenKind.commaToken));
-		} else if(c == '{'){
-			curLineTokens.add(new Token(TokenKind.leftBraceToken));
-		} else if(c == '['){
-			curLineTokens.add(new Token(TokenKind.leftBracketToken));
-		} else if(c == '('){
-			curLineTokens.add(new Token(TokenKind.leftParToken));
-		} else if(c == '}'){
-			curLineTokens.add(new Token(TokenKind.rightBraceToken));
-		} else if(c == ']'){
-			curLineTokens.add(new Token(TokenKind.rightBracketToken));
-		} else if(c == ')'){
-			curLineTokens.add(new Token(TokenKind.rightParToken));
-		} else if(c == ';'){
-			curLineTokens.add(new Token(TokenKind.semicolonToken));
+			curLineTokens.add(new Token(plusToken,curLineNum()));
+		} else if (c == '/'){
+			if(line.charAt(pos++) == '/'){
+				curLineTokens.add(new Token(doubleSlashToken,curLineNum()));
+			} else
+			curLineTokens.add(new Token(slashToken,curLineNum()));
+		} else if (c == ':'){
+			curLineTokens.add(new Token(colonToken,curLineNum()));
+		} else if (c == ','){
+			curLineTokens.add(new Token(commaToken,curLineNum()));
+		} else if (c == '{'){
+			curLineTokens.add(new Token(leftBraceToken,curLineNum()));
+		} else if (c == '['){
+			curLineTokens.add(new Token(leftBracketToken,curLineNum()));
+		} else if (c == '('){
+			curLineTokens.add(new Token(leftParToken,curLineNum()));
+		} else if (c == '}'){
+			curLineTokens.add(new Token(rightBraceToken,curLineNum()));
+		} else if (c == ']'){
+			curLineTokens.add(new Token(rightBracketToken,curLineNum()));
+		} else if (c == ')'){
+			curLineTokens.add(new Token(rightParToken,curLineNum()));
+		} else if (c == ';'){
+			curLineTokens.add(new Token(semicolonToken,curLineNum()));
+		} else if (c == '!' && line.charAt(pos++) == '='){
+			curLineTokens.add(new Token(notEqualToken,curLineNum()));
 		}
 	}
  
