@@ -76,7 +76,7 @@ public class Scanner {
 		curLineTokens.add(new Token(eofToken,curLineNum()));
 		for (Token t: curLineTokens) 
 	    Main.log.noteToken(t);
-		System.out.println(curLineTokens);
+		//System.out.println(curLineTokens);
 		return;
 	}
 
@@ -306,10 +306,10 @@ public class Scanner {
 				curLineTokens.add(nameToken);
 			}
 		}
-		else if(c == '"'){ //min pc tilater ikke bruk av ' tegn som en variabel. kunn " 
+		else if(c == '"' || c == '\''){  
 
 			String strLit = "" + c;
-			while((pos+1)< line.length() && line.charAt(pos+1) != '"'){
+			while((pos+1)< line.length() && (line.charAt(pos+1) != '"' || line.charAt(pos+1) != '\'')){
 				c = line.charAt(pos+1);
 				strLit = strLit + c;
 				pos++;
@@ -317,13 +317,26 @@ public class Scanner {
 					strLit = strLit + '"';
 					pos++; 
 					break;
-				}
+				} else if(line.charAt(pos+1) == '\''){
+					strLit = strLit + '\'';
+					pos++; 
+					break;
+				} //else if(c == '\0'){
+				//	scannerError("streng slutter ikke. leg til riktig symbol på slutten av streng");
+				//}
 			}
-			System.out.println(strLit);
-			String str = strLit.substring(1, strLit.length() - 1);
-			Token stringToken = new Token(TokenKind.stringToken,curLineNum());
-			stringToken.stringLit = str;
-			curLineTokens.add(stringToken);
+			//System.out.println(strLit);
+			//System.out.println(strLit.charAt(0));
+			//System.out.println(strLit.charAt(strLit.length()-1));
+			if(strLit.charAt(0) == strLit.charAt(strLit.length()-1)){
+				String str = strLit.substring(1, strLit.length() - 1);
+				//System.out.println(str);
+				Token stringToken = new Token(TokenKind.stringToken,curLineNum());
+				stringToken.stringLit = str;
+				curLineTokens.add(stringToken);
+			} else{
+				scannerError("string does not end or there is a mismatch between opening and closing symbols");
+			}
 		}
 	pos++;
 	}
@@ -341,7 +354,7 @@ public class Scanner {
 
 	for (Token t: curLineTokens) 
 	    Main.log.noteToken(t);
-		System.out.println(curLineTokens);
+		//System.out.println(curLineTokens);
     }
 
 
