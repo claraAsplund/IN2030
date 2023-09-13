@@ -164,7 +164,7 @@ public class Scanner {
 			
 			}
 		} else if (c == '*'){
-			curLineTokens.add(new Token(asToken,curLineNum()));
+			curLineTokens.add(new Token(astToken,curLineNum()));
 		} else if (c == '='){
 			if(pos+1 < line.length() && line.charAt(pos+1) == '='){
 				curLineTokens.add(new Token(doubleEqualToken,curLineNum()));
@@ -313,7 +313,14 @@ public class Scanner {
 				c = line.charAt(pos+1);
 				strLit = strLit + c;
 				pos++;
-				if(line.charAt(pos+1) == '"'){
+				if(line.charAt(pos) == '"' || line.charAt(pos) == '\''){
+					pos++; 
+					break;
+				}
+		
+				if((pos+1) >= line.length()){
+					scannerError("String error");
+				} else if(line.charAt(pos+1) == '"'){
 					strLit = strLit + '"';
 					pos++; 
 					break;
@@ -321,13 +328,9 @@ public class Scanner {
 					strLit = strLit + '\'';
 					pos++; 
 					break;
-				} //else if(c == '\0'){
-				//	scannerError("streng slutter ikke. leg til riktig symbol på slutten av streng");
-				//}
+				}
 			}
-			//System.out.println(strLit);
-			//System.out.println(strLit.charAt(0));
-			//System.out.println(strLit.charAt(strLit.length()-1));
+			
 			if(strLit.charAt(0) == strLit.charAt(strLit.length()-1)){
 				String str = strLit.substring(1, strLit.length() - 1);
 				//System.out.println(str);
