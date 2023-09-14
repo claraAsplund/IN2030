@@ -73,6 +73,9 @@ public class Scanner {
 	    scannerError("Unspecified I/O error!");
 	}
 	if(line == null){
+		while(indents.pop() > 0){
+			curLineTokens.add(new Token(dedentToken,curLineNum()));
+		}
 		curLineTokens.add(new Token(eofToken,curLineNum()));
 		for (Token t: curLineTokens) 
 	    Main.log.noteToken(t);
@@ -125,6 +128,10 @@ public class Scanner {
 		} 
 		else if (isDigit(c)) {
 			String tallstreng = "";
+
+			if(line.charAt(pos-1) == '.'){
+				scannerError("float number can not start with '.'");
+			}
 			
 			if(c == '0'){
 				curLineTokens.add(new Token(integerToken,curLineNum()));
@@ -148,6 +155,10 @@ public class Scanner {
 				pos--;
 
 			if(tallstreng.contains(".")){
+
+				if(tallstreng.charAt(tallstreng.length()-1) == '.'){
+					scannerError("float number can not end with '.'");
+				}
 				float myNum = Float.parseFloat(tallstreng); 
 				Token t = new Token(TokenKind.floatToken,curLineNum());
 				t.floatLit = myNum;
@@ -319,7 +330,7 @@ public class Scanner {
 				}
 		
 				if((pos+1) >= line.length()){
-					scannerError("String error");
+					scannerError("string does not end or does not end on cur line");
 				} else if(line.charAt(pos+1) == '"'){
 					strLit = strLit + '"';
 					pos++; 
@@ -338,16 +349,13 @@ public class Scanner {
 				stringToken.stringLit = str;
 				curLineTokens.add(stringToken);
 			} else{
-				scannerError("string does not end or there is a mismatch between opening and closing symbols");
+				scannerError("there is a mismatch between opening and closing symbols for stringLit token");
 			}
 		}
 	pos++;
 	}
     
     curLineTokens.add(new Token(newLineToken,curLineNum()));
-	
-	//ArrayList<String> testlist = new ArrayList<>(Arrays.asList(line.split("")));
-	//System.out.println(testlist);
 
 	// - slutt på arbeidskode <-
 
