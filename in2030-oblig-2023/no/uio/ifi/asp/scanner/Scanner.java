@@ -90,6 +90,11 @@ public class Scanner {
 	//Omform alle innedende TAB-er til blanke ved exp
 	line = expandLeadingTabs(line);
 	//Tell antall innledende blanke 
+	
+	if (line.replaceAll(" ", "").charAt(0) == '#'){
+		return;
+
+	}
 
 	int n;
 	n = findIndent(line);
@@ -116,15 +121,7 @@ public class Scanner {
 		}
 	
 		else if(c == '#'){
-			if(curLineTokens.isEmpty()){
-				return;
-			}else{
-				for (Token t: curLineTokens){ 
-	    		Main.log.noteToken(t);
-    			}
-				curLineTokens.add(new Token(newLineToken,curLineNum()));
-			}
-			return;
+			break;
 		} 
 		else if (isDigit(c)) {
 			String tallstreng = "";
@@ -350,7 +347,9 @@ public class Scanner {
 				curLineTokens.add(stringToken);
 			} else{
 				scannerError("there is a mismatch between opening and closing symbols for stringLit token");
-			}
+			} 
+		} else {
+			scannerError("Illegal character: '" +c+ "'!");
 		}
 	pos++;
 	}
