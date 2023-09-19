@@ -22,7 +22,6 @@ public class Main {
 
         System.out.println("This is the IN2030 Asp interpreter (" + version + ")");
         System.out.println("Utviklet av Clara Asplund og Emel Kadragic");
-        System.out.println("test 1");
 
         for (String a: arg) {
             if (a.equals("-logE")) {

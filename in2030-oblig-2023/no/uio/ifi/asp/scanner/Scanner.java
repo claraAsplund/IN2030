@@ -72,15 +72,301 @@ public class Scanner {
 	    sourceFile = null;
 	    scannerError("Unspecified I/O error!");
 	}
+	if(line == null){
+		while(indents.pop() > 0){
+			curLineTokens.add(new Token(dedentToken,curLineNum()));
+		}
+		curLineTokens.add(new Token(eofToken,curLineNum()));
+		for (Token t: curLineTokens) 
+	    Main.log.noteToken(t);
+		//System.out.println(curLineTokens);
+		return;
+	}
 
+	// - arbiedskode ->
+	if(line.isBlank() == true){ //sjekker om linje er tom
+		return;
+	}
+	//Omform alle innedende TAB-er til blanke ved exp
+	line = expandLeadingTabs(line);
+	//Tell antall innledende blanke 
+	
+	if (line.replaceAll(" ", "").charAt(0) == '#'){
+		return;
+
+	}
+
+	int n;
+	n = findIndent(line);
+	if (n > indents.peek()){
+		indents.push(n);
+		curLineTokens.add(new Token(indentToken,curLineNum()));
+
+	}
+	while (n < indents.peek()){
+		indents.pop();
+		curLineTokens.add(new Token(dedentToken,curLineNum()));
+	}
+	if(n != indents.peek()){
+		scannerError("indenteringsfeil!");
+	}
+	
+
+	int pos = 0;
+	while (pos < line.length()) {
+		char c = line.charAt(pos);
+		
+		if (Character.isWhitespace(c)) { //ignorer blanke 
+		
+		}
+	
+		else if(c == '#'){
+			break;
+		} 
+		else if (isDigit(c)) {
+			String tallstreng = "";
+
+			if(line.charAt(pos-1) == '.'){
+				scannerError("float number can not start with '.'");
+			}
+			
+			if(c == '0'){
+				curLineTokens.add(new Token(integerToken,curLineNum()));
+				//break;
+				
+			} else	{
+				
+				while((isDigit(c) || c == '.') && pos < line.length()){
+					c = line.charAt(pos);
+					if(isDigit(c) || c == '.'){
+						tallstreng = tallstreng + c;
+						pos++;
+						//System.out.println(tallstreng);
+						//System.out.println("pos: " + pos);
+						//System.out.println(line.length());
+					}
+					else{
+						break;
+					}	
+				}
+				pos--;
+
+			if(tallstreng.contains(".")){
+
+				if(tallstreng.charAt(tallstreng.length()-1) == '.'){
+					scannerError("float number can not end with '.'");
+				}
+				float myNum = Float.parseFloat(tallstreng); 
+				Token t = new Token(TokenKind.floatToken,curLineNum());
+				t.floatLit = myNum;
+				curLineTokens.add(t);
+				tallstreng = "";
+			
+			}else{
+				int myNum =Integer.parseInt(tallstreng); 
+				Token t = new Token(TokenKind.integerToken,curLineNum());
+				t.integerLit = myNum;
+				curLineTokens.add(t);
+				tallstreng = "";
+				}
+			
+			}
+		} else if (c == '*'){
+			curLineTokens.add(new Token(astToken,curLineNum()));
+		} else if (c == '='){
+			if(pos+1 < line.length() && line.charAt(pos+1) == '='){
+				curLineTokens.add(new Token(doubleEqualToken,curLineNum()));
+				pos++;
+			} else
+			curLineTokens.add(new Token(equalToken,curLineNum()));
+		} else if (c == '>'){
+			if(pos+1 < line.length() && line.charAt(pos+1) == '='){
+				curLineTokens.add(new Token(greaterEqualToken,curLineNum()));
+				pos++;
+			} else
+			curLineTokens.add(new Token(greaterToken,curLineNum()));
+		} else if (c == '<'){
+			if(pos+1 < line.length() && line.charAt(pos+1) == '='){
+				curLineTokens.add(new Token(lessEqualToken,curLineNum()));
+				pos++;
+			} else
+			curLineTokens.add(new Token(lessToken,curLineNum()));
+		} else if (c == '-'){
+			curLineTokens.add(new Token(minusToken,curLineNum()));
+		} else if (c == '%'){
+			curLineTokens.add(new Token(percentToken,curLineNum()));
+		} else if (c == '+'){
+			curLineTokens.add(new Token(plusToken,curLineNum()));
+		} else if (c == '/'){
+			if(pos+1 < line.length() && line.charAt(pos+1) == '/'){
+				curLineTokens.add(new Token(doubleSlashToken,curLineNum()));
+				pos++;
+			} else
+			curLineTokens.add(new Token(slashToken,curLineNum()));
+		} else if (c == ':'){
+			curLineTokens.add(new Token(colonToken,curLineNum()));
+		} else if (c == ','){
+			curLineTokens.add(new Token(commaToken,curLineNum()));
+		} else if (c == '{'){
+			curLineTokens.add(new Token(leftBraceToken,curLineNum()));
+		} else if (c == '['){
+			curLineTokens.add(new Token(leftBracketToken,curLineNum()));
+		} else if (c == '('){
+			curLineTokens.add(new Token(leftParToken,curLineNum()));
+		} else if (c == '}'){
+			curLineTokens.add(new Token(rightBraceToken,curLineNum()));
+		} else if (c == ']'){
+			curLineTokens.add(new Token(rightBracketToken,curLineNum()));
+		} else if (c == ')'){
+			curLineTokens.add(new Token(rightParToken,curLineNum()));
+		} else if (c == ';'){
+			curLineTokens.add(new Token(semicolonToken,curLineNum()));
+		} else if (c == '!' && pos+1 < line.length() && line.charAt(pos+1) == '='){
+			curLineTokens.add(new Token(notEqualToken,curLineNum()));
+			pos++;
+		}
+		else if(isLetterAZ(c)){
+			//int pos = 0;
+			//for(pos = 0; pos <line.length(); pos++){
+			//    char c = line.charAt(pos)
+			//}
+
+			String s = "" + c;
+
+			while( (pos+1) <line.length() && (isLetterAZ(line.charAt(pos+1)) || isDigit(line.charAt(pos+1))) ){
+				pos++;
+				c = line.charAt(pos);
+				s = s+c;
+
+			}
+			//curLineTokens.add(new Token(newLineToken,curLineNum()));
+			if (s.equals("and")){
+				Token andToken = new Token(TokenKind.andToken,curLineNum());
+				curLineTokens.add(andToken);
+				andToken.showInfo();
+
+				//Token andToken = new Token(TokenKind.andToken);
+				//curLineTokens.add(new Token(andToken,curLineNum()));
+
+			}else if(s.equals("def")){
+				Token defToken = new Token(TokenKind.defToken,curLineNum());
+				curLineTokens.add(defToken);
+
+			}else if(s.equals("elif")){
+				Token elifToken = new Token(TokenKind.elifToken,curLineNum());
+				curLineTokens.add(elifToken);
+
+			}else if(s.equals( "else")){
+				Token elseToken = new Token(TokenKind.elseToken,curLineNum());
+				curLineTokens.add(elseToken);
+			}else if(s.equals("False")){
+				Token falseToken = new Token(TokenKind.falseToken,curLineNum());
+				curLineTokens.add(falseToken);
+
+			}else if(s.equals( "for")){
+				Token forToken = new Token(TokenKind.forToken,curLineNum());
+				curLineTokens.add(forToken);
+
+			}else if(s.equals("global")){
+				Token globalToken = new Token(TokenKind.globalToken,curLineNum());
+				curLineTokens.add(globalToken);
+
+			}else if(s.equals( "if")){
+				Token ifToken = new Token(TokenKind.ifToken,curLineNum());
+				curLineTokens.add(ifToken);
+
+			}else if(s.equals("in")){
+				Token inToken = new Token(TokenKind.inToken,curLineNum());
+				curLineTokens.add(inToken);
+
+			}else if(s.equals("None")){
+				Token noneToken = new Token(TokenKind.noneToken,curLineNum());
+				curLineTokens.add(noneToken);
+
+			}else if(s.equals( "not")){
+				Token notToken = new Token(TokenKind.notToken,curLineNum());
+				curLineTokens.add(notToken);
+
+			}else if(s.equals("or")){
+				Token orToken = new Token(TokenKind.orToken,curLineNum());
+				curLineTokens.add(orToken);
+
+			}else if(s.equals("pass")){
+				Token passToken = new Token(TokenKind.passToken,curLineNum());
+				curLineTokens.add(passToken);
+			}else if(s.equals("return")){
+				Token returnToken = new Token(TokenKind.returnToken,curLineNum());
+				curLineTokens.add(returnToken);
+
+			}else if(s.equals("True")){
+				Token trueToken = new Token(TokenKind.trueToken,curLineNum());
+				curLineTokens.add(trueToken);
+
+			}else if(s.equals("while")){
+				Token whileToken = new Token(TokenKind.whileToken,curLineNum());
+				curLineTokens.add(whileToken);
+
+			}
+
+			else{
+				Token nameToken = new Token(TokenKind.nameToken,curLineNum());
+				nameToken.name = s;
+				curLineTokens.add(nameToken);
+			}
+		}
+		else if(c == '"' || c == '\''){  
+
+			String strLit = "" + c;
+			while((pos+1)< line.length() && (line.charAt(pos+1) != '"' || line.charAt(pos+1) != '\'')){
+				c = line.charAt(pos+1);
+				strLit = strLit + c;
+				pos++;
+				if(line.charAt(pos) == '"' || line.charAt(pos) == '\''){
+					pos++; 
+					break;
+				}
+		
+				if((pos+1) >= line.length()){
+					scannerError("string does not end or does not end on cur line");
+				} else if(line.charAt(pos+1) == '"'){
+					strLit = strLit + '"';
+					pos++; 
+					break;
+				} else if(line.charAt(pos+1) == '\''){
+					strLit = strLit + '\'';
+					pos++; 
+					break;
+				}
+			}
+			
+			if(strLit.charAt(0) == strLit.charAt(strLit.length()-1)){
+				String str = strLit.substring(1, strLit.length() - 1);
+				//System.out.println(str);
+				Token stringToken = new Token(TokenKind.stringToken,curLineNum());
+				stringToken.stringLit = str;
+				curLineTokens.add(stringToken);
+			} else{
+				scannerError("there is a mismatch between opening and closing symbols for stringLit token");
+			} 
+		} else {
+			scannerError("Illegal character: '" +c+ "'!");
+		}
+	pos++;
+	}
+    
+    curLineTokens.add(new Token(newLineToken,curLineNum()));
+
+	// - slutt på arbeidskode <-
+
+	
 	//-- Must be changed in part 1:
 
-	// Terminate line:
-	curLineTokens.add(new Token(newLineToken,curLineNum()));
 
 	for (Token t: curLineTokens) 
 	    Main.log.noteToken(t);
+		//System.out.println(curLineTokens);
     }
+
 
     public int curLineNum() {
 	return sourceFile!=null ? sourceFile.getLineNumber() : 0;
@@ -94,9 +380,25 @@ public class Scanner {
     }
 
     private String expandLeadingTabs(String s) {
-	//-- Must be changed in part 1:
-	return null;
-    }
+		//-- Must be changed in part 1:
+			int indent = 0;
+			int e = 0;
+	
+			for (e = 0; e < s.length(); e ++){
+				if(s.charAt(e) == ' '){
+					indent ++;
+				}
+				else if(s.charAt(e) == '\t'){
+					indent += 4 - (indent % 4);
+	
+				}
+				else {
+					break;
+				}
+	
+			} 
+			return " ".repeat(indent) + s.substring(e);
+		}
 
 
     private boolean isLetterAZ(char c) {
