@@ -4,9 +4,9 @@ import no.uio.ifi.asp.runtime.RuntimeReturnValue;
 import no.uio.ifi.asp.runtime.RuntimeScope;
 import no.uio.ifi.asp.runtime.RuntimeValue;
 
-public class AspDictDisplay extends AspAtom{
+abstract class AspPrimarySuffix extends AspSyntax {
 
-    AspDictDisplay(int n) {
+    AspPrimarySuffix(int n) {
         super(n);
     
     }

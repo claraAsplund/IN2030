@@ -4,9 +4,9 @@ import no.uio.ifi.asp.runtime.RuntimeReturnValue;
 import no.uio.ifi.asp.runtime.RuntimeScope;
 import no.uio.ifi.asp.runtime.RuntimeValue;
 
-public class AspDictDisplay extends AspAtom{
-
-    AspDictDisplay(int n) {
+abstract class AspAtom extends AspSyntax{
+    
+    AspAtom(int n) {
         super(n);
     
     }
@@ -22,5 +22,4 @@ public class AspDictDisplay extends AspAtom{
         return null;
 
     }
-    
 }

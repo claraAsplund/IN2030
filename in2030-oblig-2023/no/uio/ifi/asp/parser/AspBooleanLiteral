@@ -1,5 +1,0 @@
-package no.uio.ifi.asp.parser;
-
-class AspBooleanLiteral extends AspAtom{
-
-}
