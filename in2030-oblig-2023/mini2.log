@@ -1,0 +1,3 @@
+   1:     # hello
+   2: $name  #hello
+Asp scanner error on line 2: Illegal character: '$'!
