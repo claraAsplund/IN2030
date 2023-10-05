@@ -13,7 +13,6 @@ import static no.uio.ifi.asp.scanner.TokenKind.*;
 public class AspNotTest extends AspSyntax{
     AspComparison comparison;
 
-
     AspNotTest(int n) {
         super(n);
     
@@ -29,8 +28,6 @@ public class AspNotTest extends AspSyntax{
 
         leaveParser("AspNotTest");
         return ant;
-
-
 
 
     }
