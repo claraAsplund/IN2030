@@ -1,34 +1,32 @@
 package no.uio.ifi.asp.parser;
 
-import no.uio.ifi.asp.runtime.RuntimeReturnValue;
-import no.uio.ifi.asp.runtime.RuntimeScope;
-import no.uio.ifi.asp.runtime.RuntimeValue;
-import no.uio.ifi.asp.scanner.Scanner;
+import no.uio.ifi.asp.main.*;
+import no.uio.ifi.asp.scanner.*;
+import no.uio.ifi.asp.runtime.*;
 import static no.uio.ifi.asp.scanner.TokenKind.*;
-
 
 public class AspExprStmt extends AspSmallStmt {
 
-    AspExpr ae;
+    AspExpr expr;
 
     AspExprStmt(int n) {
         super(n);
     
     }
-    static AspExprStmt parse(Scanner s){
+    public static AspExprStmt parse(Scanner s){
         enterParser("expr stmt");
 
         AspExprStmt aes = new AspExprStmt(s.curLineNum());
-            aes.ae = AspExpr.parse(s);
+            aes.expr = AspExpr.parse(s);
 
-        //System.out.println(aes);    
+       
         leaveParser("expr stmt");
         return aes; 
     }
    
     @Override
     public void prettyPrint(){
-        //-- Must be changed in part 2:
+        expr.prettyPrint();
 
     }
     

@@ -1,18 +1,31 @@
 package no.uio.ifi.asp.parser;
+import no.uio.ifi.asp.main.*;
+import no.uio.ifi.asp.scanner.*;
+import no.uio.ifi.asp.runtime.*;
+import static no.uio.ifi.asp.scanner.TokenKind.*;
 
-import no.uio.ifi.asp.runtime.RuntimeReturnValue;
-import no.uio.ifi.asp.runtime.RuntimeScope;
-import no.uio.ifi.asp.runtime.RuntimeValue;
 
 public class AspStringLiteral extends AspAtom{
+    String savedStringLit;
 
     AspStringLiteral(int n) {
         super(n);
     
     }
+    public static AspStringLiteral parse(Scanner s){
+        enterParser("string literal");
+        AspStringLiteral asl = new AspStringLiteral(s.curLineNum());
+        asl.savedStringLit = s.curToken().stringLit;
+
+        skip(s,stringToken);
+
+        leaveParser("string literal");
+        return asl;
+    }
 
     @Override
     public void prettyPrint(){
+        prettyWrite("\"" + savedStringLit + "\"");
 
     }
     

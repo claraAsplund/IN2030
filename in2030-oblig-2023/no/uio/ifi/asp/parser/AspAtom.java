@@ -1,11 +1,11 @@
 package no.uio.ifi.asp.parser;
 
-import no.uio.ifi.asp.runtime.RuntimeReturnValue;
-import no.uio.ifi.asp.runtime.RuntimeScope;
-import no.uio.ifi.asp.runtime.RuntimeValue;
-import no.uio.ifi.asp.scanner.Scanner;
+import no.uio.ifi.asp.main.*;
+import no.uio.ifi.asp.scanner.*;
+import no.uio.ifi.asp.runtime.*;
+import static no.uio.ifi.asp.scanner.TokenKind.*;
 
-abstract class AspAtom extends AspSyntax{
+abstract class  AspAtom extends AspSyntax{
     
     AspAtom(int n) {
         super(n);
@@ -13,6 +13,8 @@ abstract class AspAtom extends AspSyntax{
     }
     //kode fra forelesning 2023
     static AspAtom parse(Scanner s){
+        enterParser("atom");
+
         AspAtom aa = null;
         switch(s.curToken().kind){
             case falseToken:
@@ -33,11 +35,9 @@ abstract class AspAtom extends AspSyntax{
             case leftBracketToken:
                 aa = AspListDisplay.parse(s);
                 break;
-
             case leftParToken:
                 aa = AspInnerExpr.parse(s);
                 break;    
-
             case nameToken:
                 aa = AspName.parse(s);
                 break;
@@ -54,14 +54,12 @@ abstract class AspAtom extends AspSyntax{
                             s.curToken().kind + "!", s.curLineNum());
             
         }
+        leaveParser("atom");
         return aa;
     }
 
     @Override
-    public void prettyPrint(){
-        //må skrives del2
-
-    }
+    public abstract void prettyPrint();
     
     @Override
     public RuntimeValue eval(RuntimeScope curScope) throws RuntimeReturnValue{

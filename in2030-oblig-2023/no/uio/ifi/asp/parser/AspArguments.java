@@ -32,17 +32,23 @@ public class AspArguments extends AspPrimarySuffix{
         }
         skip(s, rightParToken);
 
-        leaveParser("AspAndTest");
+        leaveParser("arguments");
         return aa;
-
     }
-
-
-
 
     @Override
     public void prettyPrint(){
 
+        prettyWrite("(");
+        int nPrinted = 0;
+        for(AspExpr expr: exprs){
+            if(nPrinted > 0){
+                prettyWrite(", ");
+            }
+            expr.prettyPrint();
+            nPrinted++;
+        }
+        prettyWrite(")");
     }
     
     @Override

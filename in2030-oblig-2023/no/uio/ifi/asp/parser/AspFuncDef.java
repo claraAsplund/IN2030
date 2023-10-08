@@ -18,7 +18,7 @@ public class AspFuncDef extends AspCompoundStmt{
     
     }
     public static AspFuncDef parse(Scanner s){
-        enterParser("fund def");
+        enterParser("func def");
         AspFuncDef afd = new AspFuncDef(s.curLineNum());
 
         skip(s, defToken);
@@ -32,16 +32,34 @@ public class AspFuncDef extends AspCompoundStmt{
                 skip(s,commaToken);
 
         }
+        skip(s,rightParToken);
         skip(s,colonToken);
         afd.suite = AspSuite.parse(s);
         
-        leaveParser("fund def");
+        leaveParser("func def");
         return afd;
 
     }
 
     @Override
     public void prettyPrint(){
+        int nPrinted = 0;
+        prettyWrite("def ");
+        name.prettyPrint();
+        prettyWrite("(");
+        
+
+        for(AspName name : names){
+            if(nPrinted > 0){
+                prettyWrite(", ");
+            }
+            name.prettyPrint();
+            nPrinted++;
+
+        }
+        prettyWrite(")");
+        prettyWrite(":");
+        suite.prettyPrint();
 
     }
     

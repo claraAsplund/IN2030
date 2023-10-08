@@ -18,22 +18,58 @@ public class AspSmallStmtList extends AspStmt {
     }
 
     public static AspSmallStmtList parse(Scanner s) {
-        enterParser("AspSmallStmtList");
+        enterParser("small stmt list");
 
         AspSmallStmtList assl = new AspSmallStmtList(s.curLineNum());
-
+        //assl.smallStmts.add(AspSmallStmt.parse(s));
+        
         while(true){
             assl.smallStmts.add(AspSmallStmt.parse(s));
-            skip(s, semicolonToken);
-            if(s.curToken().kind == newLineToken) break;
+            if (s.curToken().kind == semicolonToken) {
+                skip(s, semicolonToken);
+            }
+            
+            if(s.curToken().kind == newLineToken) {
+                skip(s, newLineToken);
+                break;
+            }
         }
-
-        leaveParser("AspSmallStmtList");
+        
+          
+        /* 
+        while(true){
+            if(s.curToken().kind == newLineToken){
+                skip(s,newLineToken);
+                break;
+            }else if(s.curToken().kind == semicolonToken){
+                skip(s,semicolonToken);
+                if(s.curToken().kind == newLineToken){
+                    skip(s,newLineToken);   
+                    break;
+        
+                }else{
+                    assl.smallStmts.add(AspSmallStmt.parse(s));
+                }
+            }
+        }
+        */
+        
+        
+        leaveParser("small stmt list");
         return assl;
     }
 
     @Override
     public void prettyPrint(){
+        
+        for(AspSmallStmt smallStmt : smallStmts) {
+ 
+            smallStmt.prettyPrint();
+            prettyWrite(";");
+
+            
+        }
+        prettyWrite("\n");
 
     }
     

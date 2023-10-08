@@ -6,20 +6,23 @@ import no.uio.ifi.asp.scanner.*;
 import static no.uio.ifi.asp.scanner.TokenKind.*;
 
 public class AspTermOpr extends AspSyntax{
+    Boolean isPlus;
 
     AspTermOpr(int n) {
         super(n);
     
     }
     public static AspTermOpr parse(Scanner s){
-        enterParser("AspTermOpr");
+        enterParser("term opr");
 
         AspTermOpr ato = new AspTermOpr(s.curLineNum());
        
         if (s.curToken().kind == TokenKind.plusToken){
+            ato.isPlus = true;
             skip(s,plusToken);
         }
         else if(s.curToken().kind == TokenKind.minusToken){
+            ato.isPlus = false;
             skip(s, minusToken);
         }
         else {
@@ -27,15 +30,23 @@ public class AspTermOpr extends AspSyntax{
             s.curToken().kind + "!", s.curLineNum() );
         }
 
-        leaveParser("AspTermOpr");
+        leaveParser("term opr");
         return ato;
     
     
     }
     @Override
     public void prettyPrint(){
+       
+       if(isPlus){
+            prettyWrite(" + ");
+       }else {
+            prettyWrite(" - ");
 
+       }
     }
+
+    
     
     @Override
     public RuntimeValue eval(RuntimeScope curScope) throws RuntimeReturnValue{

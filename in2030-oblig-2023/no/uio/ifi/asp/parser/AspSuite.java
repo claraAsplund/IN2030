@@ -30,22 +30,33 @@ public class AspSuite extends AspSyntax{
             as.stmts.add(AspStmt.parse(s));
             while(true){
                 if(s.curToken().kind == dedentToken){
+                   
                     break;
                 }
                 else{
                     as.stmts.add(AspStmt.parse(s));
                 }
             }
+            skip(s,dedentToken);
         }
         
         leaveParser("suite");
         return as;
     }
 
-
-
     @Override
     public void prettyPrint(){
+        if (smallStmtList != null){
+            smallStmtList.prettyPrint();
+        }
+        else{
+            prettyWrite("\n");
+
+            for(AspStmt stmt: stmts){
+                prettyWrite("  ");
+                stmt.prettyPrint();
+            }
+        }
 
     }
     

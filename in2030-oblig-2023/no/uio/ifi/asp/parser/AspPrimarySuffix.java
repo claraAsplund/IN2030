@@ -15,8 +15,9 @@ abstract class AspPrimarySuffix extends AspSyntax {
     
     }
     public static AspPrimarySuffix parse(Scanner s){
-        AspPrimarySuffix aps = null;
+       
         enterParser("primary suffix");
+        AspPrimarySuffix aps = null;
 
         if(s.curToken().kind == TokenKind.leftParToken){
             aps = AspArguments.parse(s);
@@ -29,20 +30,13 @@ abstract class AspPrimarySuffix extends AspSyntax {
 
         }    
 
-        enterParser("AspAndTest");
+        leaveParser("primary suffix");
         return aps;
 
     }   
 
-
-    
-
-
-
     @Override
-    public void prettyPrint(){
-
-    }
+    public abstract void prettyPrint();
     
     @Override
     public RuntimeValue eval(RuntimeScope curScope) throws RuntimeReturnValue{
