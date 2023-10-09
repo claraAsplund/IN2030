@@ -16,13 +16,12 @@ public class AspSmallStmtList extends AspStmt {
         super(n);
     
     }
-
     public static AspSmallStmtList parse(Scanner s) {
         enterParser("small stmt list");
 
         AspSmallStmtList assl = new AspSmallStmtList(s.curLineNum());
-        //assl.smallStmts.add(AspSmallStmt.parse(s));
-        
+        assl.smallStmts.add(AspSmallStmt.parse(s));
+        /* 
         while(true){
             assl.smallStmts.add(AspSmallStmt.parse(s));
             if (s.curToken().kind == semicolonToken) {
@@ -34,9 +33,9 @@ public class AspSmallStmtList extends AspStmt {
                 break;
             }
         }
-        
+        */
           
-        /* 
+         
         while(true){
             if(s.curToken().kind == newLineToken){
                 skip(s,newLineToken);
@@ -52,7 +51,7 @@ public class AspSmallStmtList extends AspStmt {
                 }
             }
         }
-        */
+        
         
         
         leaveParser("small stmt list");
@@ -61,6 +60,21 @@ public class AspSmallStmtList extends AspStmt {
 
     @Override
     public void prettyPrint(){
+        int nPrinted = 0;
+        for(AspSmallStmt ass: smallStmts){
+            if(nPrinted >0){
+                prettyWrite(";");
+            }
+            ass.prettyPrint();
+            ++nPrinted;
+        }
+       
+        prettyWrite("\n");
+    }
+
+
+
+        /* 
         
         for(AspSmallStmt smallStmt : smallStmts) {
  
@@ -70,8 +84,9 @@ public class AspSmallStmtList extends AspStmt {
             
         }
         prettyWrite("\n");
+        */
 
-    }
+    
     
     @Override
     public RuntimeValue eval(RuntimeScope curScope) throws RuntimeReturnValue{

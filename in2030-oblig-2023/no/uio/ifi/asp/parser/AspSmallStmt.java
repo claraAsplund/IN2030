@@ -16,6 +16,46 @@ abstract class AspSmallStmt extends AspSyntax {
         enterParser("small stmt");
         AspSmallStmt ass = null;
 
+        switch(s.curToken().kind){ 
+            case integerToken:
+            case floatToken:
+            case stringToken:
+            case trueToken:
+            case falseToken:
+            case noneToken:
+            case notToken:
+            case plusToken:
+            case minusToken:
+            case nameToken:
+            case leftBraceToken:
+            case leftBracketToken:
+            case leftParToken:
+                if(s.anyEqualToken()){
+                    ass = AspAssignment.parse(s);
+                    break;
+                }else{
+                    ass = AspExprStmt.parse(s);
+                    break;
+                }
+            case globalToken: 
+                ass = AspGlobalStmt.parse(s);
+                break; 
+            case passToken: 
+                ass = AspPassStmt.parse(s);
+                break;
+            case returnToken: 
+                ass = AspReturnStmt.parse(s);
+                break;
+            default:
+                parserError("no case valid between return, pass, global, expr and assignemt case", s.curLineNum());
+        }
+        leaveParser("small stmt");
+        return ass;
+
+
+
+
+        /* 
         if (s.curToken().kind == globalToken){
             ass = AspGlobalStmt.parse(s);
         }
@@ -34,7 +74,7 @@ abstract class AspSmallStmt extends AspSyntax {
         }
         
         leaveParser("small stmt");
-        return ass;
+        return ass;*/
         
     }
    

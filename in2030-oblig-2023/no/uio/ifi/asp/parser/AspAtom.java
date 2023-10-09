@@ -12,7 +12,7 @@ abstract class  AspAtom extends AspSyntax{
     
     }
     //kode fra forelesning 2023
-    static AspAtom parse(Scanner s){
+    public static AspAtom parse(Scanner s){
         enterParser("atom");
 
         AspAtom aa = null;
