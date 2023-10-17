@@ -19,13 +19,19 @@ public class RuntimeIntValue extends RuntimeValue{
     public String toString(){
         String intVtoStr = intValue + "";
         return intVtoStr;
-        
     }
+
+    @Override 
+    public boolean getBoolValue(String what, AspSyntax where){
+        return intValue != 0;
+    }
+
     @Override
     public long getIntValue(String what, AspSyntax where){
         return intValue;
     }
-
+    
+    
 
 
 

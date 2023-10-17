@@ -135,9 +135,9 @@ public class Scanner {
 				//break;
 				
 				} else	{
+				
+				
 				*/
-				
-				
 				while((isDigit(c) || c == '.') && pos < line.length()){
 					c = line.charAt(pos);
 					if(isDigit(c) || c == '.'){
